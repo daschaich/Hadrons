@@ -1,0 +1,294 @@
+SharedMemoryNone: SharedMemoryAllocate 1073741824 GPU implementation 
+0SharedMemoryNone:  SharedMemoryNone.cc acceleratorAllocDevice 1073741824bytes at 0x7f62d1c00000 for comms buffers 
+
+__|__|__|__|__|__|__|__|__|__|__|__|__|__|__
+__|__|__|__|__|__|__|__|__|__|__|__|__|__|__
+__|_ |  |  |  |  |  |  |  |  |  |  |  | _|__
+__|_                                    _|__
+__|_   GGGG    RRRR    III    DDDD      _|__
+__|_  G        R   R    I     D   D     _|__
+__|_  G        R   R    I     D    D    _|__
+__|_  G  GG    RRRR     I     D    D    _|__
+__|_  G   G    R  R     I     D   D     _|__
+__|_   GGGG    R   R   III    DDDD      _|__
+__|_                                    _|__
+__|__|__|__|__|__|__|__|__|__|__|__|__|__|__
+__|__|__|__|__|__|__|__|__|__|__|__|__|__|__
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  
+
+
+Copyright (C) 2015 Peter Boyle, Azusa Yamaguchi, Guido Cossu, Antonin Portelli and other authors
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+Current Grid git commit hash=980e721f6e25864cadfea3611a9c1a052d8d05c4: (HEAD -> develop, origin/develop, origin/HEAD) clean
+
+Grid : Message : ================================================ 
+Grid : Message : MPI is initialised and logging filters activated 
+Grid : Message : ================================================ 
+Grid : Message : Requested 1073741824 byte stencil comms buffers 
+Grid : Message : MemoryManager::Init() setting up
+Grid : Message : MemoryManager::Init() cache pool for recent allocations: SMALL 32 LARGE 8
+Grid : Message : MemoryManager::Init() Unified memory space
+Hadrons : Message : 0.304585 s : Grid initialized
+Hadrons : Message  : 0.304604 s : ====== HADRONS APPLICATION INITIALISATION ======
+Hadrons : Message  : 0.304609 s : ** Dimensions
+Hadrons : Message  : 0.304610 s : Global lattice: [8 8 8 8]
+Hadrons : Message  : 0.304635 s : MPI partition : [1 1 1 1]
+Hadrons : Message  : 0.304636 s : Local lattice : [8 8 8 8]
+Hadrons : Message  : 0.304638 s : 
+Hadrons : Message  : 0.304652 s : ** Default parameters (and associated C macros)
+Hadrons : Message  : 0.304653 s : ASCII output precision  : 16 (DEFAULT_ASCII_PREC)
+Hadrons : Message  : 0.304655 s : Fermion implementation  : WilsonImpl (FIMPLBASE)
+Hadrons : Message  : 0.304657 s : z-Fermion implementation: ZWilsonImpl (ZFIMPLBASE)
+Hadrons : Message  : 0.304659 s : Scalar implementation   : ScalarImplC (SIMPLBASE)
+Hadrons : Message  : 0.304660 s : Gauge implementation    : PeriodicGimpl (GIMPLBASE)
+Hadrons : Message  : 0.304662 s : Eigenvector base size   : 60 (HADRONS_DEFAULT_LANCZOS_NBASIS)
+Hadrons : Message  : 0.304663 s : Schur decomposition     : DiagTwo (HADRONS_DEFAULT_SCHUR)
+Hadrons : Message  : 0.304664 s : 
+Hadrons : Message  : 0.304666 s : Connecting to result database in file 'pionResult.db'...
+Hadrons : Message  : 0.363009 s : ====== HADRONS APPLICATION START ======
+Hadrons : Message  : 0.363028 s : RUN ID 'pion'
+Hadrons : Message  : 0.363032 s : Attempt(s) for resilient parallel I/O: -1
+Hadrons : Message  : 0.363053 s : Scheduling computation...
+Hadrons : Message  : 0.363056 s :                #module= 8
+Hadrons : Message  : 0.363059 s :        population size= 20
+Hadrons : Message  : 0.363062 s :        max. generation= 1000
+Hadrons : Message  : 0.363066 s :   max. cst. generation= 100
+Hadrons : Message  : 0.363069 s :          mutation rate= 0.1
+Hadrons : Message  : 0.375924 s : Start: 162.8 MB
+Hadrons : Message  : 0.376143 s : Generation 0: 162.8 MB
+Hadrons : Message  : 0.376998 s : Generation 10: 162.8 MB
+Hadrons : Message  : 0.377826 s : Generation 20: 162.8 MB
+Hadrons : Message  : 0.378763 s : Generation 30: 162.8 MB
+Hadrons : Message  : 0.379638 s : Generation 40: 162.8 MB
+Hadrons : Message  : 0.380531 s : Generation 50: 162.8 MB
+Hadrons : Message  : 0.381379 s : Generation 60: 162.8 MB
+Hadrons : Message  : 0.382175 s : Generation 70: 162.8 MB
+Hadrons : Message  : 0.383073 s : Generation 80: 162.8 MB
+Hadrons : Message  : 0.383899 s : Generation 90: 162.8 MB
+Hadrons : Message  : 0.384841 s : Generation 100: 162.8 MB
+Hadrons : Message  : 0.384868 s : Schedule (memory needed: 162.8 MB):
+Hadrons : Message  : 0.384881 s :    1: pt
+Hadrons : Message  : 0.384894 s :    2: gauge
+Hadrons : Message  : 0.384902 s :    3: DWF_l
+Hadrons : Message  : 0.384910 s :    4: CG_l
+Hadrons : Message  : 0.384918 s :    5: Qpt_l
+Hadrons : Message  : 0.384926 s :    6: sink
+Hadrons : Message  : 0.384934 s :    7: meson_pt_ll
+Hadrons : Message  : 0.384942 s :    8: pipi_ptpt_llll
+Hadrons : Message  : 0.384961 s : ================ Starting measurement for trajectory 1500 ================
+Hadrons : Message  : 0.384976 s : ---------------- Measurement step 1/8 (module 'pt') ----------------
+Hadrons : Message  : 0.384985 s : ................ Module execution
+Hadrons : Message  : 0.384996 s : Creating point source at position [0 0 0 0]
+Hadrons : Message  : 0.385763 s : ................ Timings
+Hadrons : Message  : 0.385804 s : * GLOBAL TIMERS
+Hadrons : Message  : 0.385814 s :     total: 766 us (100.0%)
+Hadrons : Message  : 0.385832 s : execution: 763 us (99.6%)
+Hadrons : Message  : 0.385843 s :     setup: 1 us (0.1%)
+Hadrons : Message  : 0.385854 s : ................ Memory management
+Hadrons : Message  : 0.385917 s : Memory: current total 1.0 GB / environment 9 MB / comms 1 GB / grid 9.0 MB / peak total 1.0 GB
+Hadrons : Message  : 0.385934 s : Garbage collection...
+Hadrons : Message  : 0.385942 s : Nothing to free
+Hadrons : Message  : 0.385965 s : ---------------- Measurement step 2/8 (module 'gauge') ----------------
+Hadrons : Message  : 0.385977 s : ................ Module execution
+Hadrons : Message  : 0.386004 s : Creating unit gauge configuration
+Hadrons : Message  : 0.386927 s : Seeding 4D RNG 0x52d6310 with string 'pion-gauge-1500'
+Grid    : Message  : 0.386959 s : Intialising parallel RNG with unique string 'pion-gauge-1500'
+Grid    : Message  : 0.386970 s : Seed SHA256: f31b6cad4e665bd533511fd25cbbb4beaa9b664d53a88c7cd7598db326bf
+Hadrons : Message  : 0.387469 s : ................ Timings
+Hadrons : Message  : 0.387490 s : * GLOBAL TIMERS
+Hadrons : Message  : 0.387499 s :     total: 1482 us (100.0%)
+Hadrons : Message  : 0.387511 s : execution: 1464 us (98.8%)
+Hadrons : Message  : 0.387524 s :     setup: 16 us (1.1%)
+Hadrons : Message  : 0.387534 s : ................ Memory management
+Hadrons : Message  : 0.387560 s : Memory: current total 1.0 GB / environment 11.2 MB / comms 1 GB / grid 11.3 MB / peak total 1.0 GB
+Hadrons : Message  : 0.387574 s : Garbage collection...
+Hadrons : Message  : 0.387582 s : Nothing to free
+Hadrons : Message  : 0.387590 s : ---------------- Measurement step 3/8 (module 'DWF_l') ----------------
+Hadrons : Message  : 0.387599 s : ................ Module execution
+Hadrons : Message  : 0.387608 s : Setting up domain wall fermion matrix with m= 0.01, M5= 1.8 and Ls= 12 using gauge field 'gauge'
+Hadrons : Message  : 0.387630 s : Fermion boundary conditions: [(1,0) (1,0) (1,0) (-1,0)]
+Hadrons : Message  : 0.387649 s : Twists: [0 0 0 0]
+Hadrons : Message  : 0.397177 s : ................ Timings
+Hadrons : Message  : 0.397230 s : * GLOBAL TIMERS
+Hadrons : Message  : 0.397242 s :     total: 9566 us (100.0%)
+Hadrons : Message  : 0.397261 s :     setup: 9563 us (100.0%)
+Hadrons : Message  : 0.397273 s : execution: 0 us (0.0%)
+Hadrons : Message  : 0.397284 s : ................ Memory management
+Hadrons : Message  : 0.397326 s : Memory: current total 1.0 GB / environment 29.3 MB / comms 1 GB / grid 29.3 MB / peak total 1.0 GB
+Hadrons : Message  : 0.397345 s : Garbage collection...
+Hadrons : Message  : 0.397354 s : Destroying object 'gauge'
+Hadrons : Message  : 0.397387 s : Memory: current total 1.0 GB / environment 27.0 MB / comms 1 GB / grid 27.0 MB / peak total 1.0 GB
+Hadrons : Message  : 0.397405 s : ---------------- Measurement step 4/8 (module 'CG_l') ----------------
+Hadrons : Message  : 0.397424 s : ................ Module execution
+Hadrons : Message  : 0.397440 s : setting up Schur red-black preconditioned CG for action 'DWF_l' with residual 1e-08, maximum iteration 10000
+Hadrons : Message  : 0.397468 s : ................ Timings
+Hadrons : Message  : 0.397480 s : * GLOBAL TIMERS
+Hadrons : Message  : 0.397489 s :     total: 32 us (100.0%)
+Hadrons : Message  : 0.397500 s :     setup: 31 us (96.9%)
+Hadrons : Message  : 0.397511 s : execution: 0 us (0.0%)
+Hadrons : Message  : 0.397522 s : ................ Memory management
+Hadrons : Message  : 0.397541 s : Memory: current total 1.0 GB / environment 27.0 MB / comms 1 GB / grid 27.0 MB / peak total 1.0 GB
+Hadrons : Message  : 0.397556 s : Garbage collection...
+Hadrons : Message  : 0.397565 s : Destroying object 'CG_l_subtract'
+Hadrons : Message  : 0.397576 s : Nothing to free
+Hadrons : Message  : 0.397585 s : ---------------- Measurement step 5/8 (module 'Qpt_l') ----------------
+Hadrons : Message  : 0.397594 s : ................ Module execution
+Hadrons : Message  : 0.397642 s : Computing quark propagator 'Qpt_l'
+Hadrons : Message  : 0.397656 s : Using source 'pt'
+Hadrons : Message  : 0.397678 s : Inverting using solver 'CG_l'
+Hadrons : Message  : 0.397687 s : Inversion for spin= 0, color= 0
+Hadrons : Message  : 0.397696 s : Import source
+Hadrons : Message  : 0.415714 s : Solve
+Grid    : Message  : 1.860259 s : ConjugateGradient Converged on iteration 52	Computed residual 9.90135e-09	True residual 9.90135e-09	Target 1e-08
+Grid    : Message  : 1.887170 s : SchurRedBlackBase solver true unprec resid 8.24047e-09
+Hadrons : Message  : 1.887859 s : Export solution
+Hadrons : Message  : 1.959326 s : Inversion for spin= 0, color= 1
+Hadrons : Message  : 1.959392 s : Import source
+Hadrons : Message  : 1.978167 s : Solve
+Grid    : Message  : 3.491077 s : ConjugateGradient Converged on iteration 52	Computed residual 9.90135e-09	True residual 9.90135e-09	Target 1e-08
+Grid    : Message  : 3.518085 s : SchurRedBlackBase solver true unprec resid 8.24047e-09
+Hadrons : Message  : 3.518147 s : Export solution
+Hadrons : Message  : 3.568511 s : Inversion for spin= 0, color= 2
+Hadrons : Message  : 3.568577 s : Import source
+Hadrons : Message  : 3.587396 s : Solve
+Grid    : Message  : 5.360440 s : ConjugateGradient Converged on iteration 52	Computed residual 9.90135e-09	True residual 9.90135e-09	Target 1e-08
+Grid    : Message  : 5.990690 s : SchurRedBlackBase solver true unprec resid 8.24047e-09
+Hadrons : Message  : 5.991420 s : Export solution
+Hadrons : Message  : 5.152310 s : Inversion for spin= 1, color= 0
+Hadrons : Message  : 5.152375 s : Import source
+Hadrons : Message  : 5.171016 s : Solve
+Grid    : Message  : 6.624798 s : ConjugateGradient Converged on iteration 52	Computed residual 9.74293e-09	True residual 9.74293e-09	Target 1e-08
+Grid    : Message  : 6.651774 s : SchurRedBlackBase solver true unprec resid 8.42072e-09
+Hadrons : Message  : 6.652454 s : Export solution
+Hadrons : Message  : 6.703198 s : Inversion for spin= 1, color= 1
+Hadrons : Message  : 6.703272 s : Import source
+Hadrons : Message  : 6.722255 s : Solve
+Grid    : Message  : 8.199446 s : ConjugateGradient Converged on iteration 52	Computed residual 9.74293e-09	True residual 9.74293e-09	Target 1e-08
+Grid    : Message  : 8.230418 s : SchurRedBlackBase solver true unprec resid 8.42072e-09
+Hadrons : Message  : 8.230478 s : Export solution
+Hadrons : Message  : 8.281594 s : Inversion for spin= 1, color= 2
+Hadrons : Message  : 8.281660 s : Import source
+Hadrons : Message  : 8.300557 s : Solve
+Grid    : Message  : 9.754175 s : ConjugateGradient Converged on iteration 52	Computed residual 9.74293e-09	True residual 9.74293e-09	Target 1e-08
+Grid    : Message  : 9.780731 s : SchurRedBlackBase solver true unprec resid 8.42072e-09
+Hadrons : Message  : 9.782366 s : Export solution
+Hadrons : Message  : 9.832704 s : Inversion for spin= 2, color= 0
+Hadrons : Message  : 9.832778 s : Import source
+Hadrons : Message  : 9.851961 s : Solve
+Grid    : Message  : 11.303834 s : ConjugateGradient Converged on iteration 52	Computed residual 9.70669e-09	True residual 9.70669e-09	Target 1e-08
+Grid    : Message  : 11.330354 s : SchurRedBlackBase solver true unprec resid 8.45282e-09
+Hadrons : Message  : 11.330421 s : Export solution
+Hadrons : Message  : 11.383639 s : Inversion for spin= 2, color= 1
+Hadrons : Message  : 11.383714 s : Import source
+Hadrons : Message  : 11.402549 s : Solve
+Grid    : Message  : 12.849430 s : ConjugateGradient Converged on iteration 52	Computed residual 9.70669e-09	True residual 9.70669e-09	Target 1e-08
+Grid    : Message  : 12.876015 s : SchurRedBlackBase solver true unprec resid 8.45282e-09
+Hadrons : Message  : 12.876079 s : Export solution
+Hadrons : Message  : 12.927562 s : Inversion for spin= 2, color= 2
+Hadrons : Message  : 12.927631 s : Import source
+Hadrons : Message  : 12.946610 s : Solve
+Grid    : Message  : 14.392770 s : ConjugateGradient Converged on iteration 52	Computed residual 9.70669e-09	True residual 9.70669e-09	Target 1e-08
+Grid    : Message  : 14.419225 s : SchurRedBlackBase solver true unprec resid 8.45282e-09
+Hadrons : Message  : 14.419293 s : Export solution
+Hadrons : Message  : 14.473421 s : Inversion for spin= 3, color= 0
+Hadrons : Message  : 14.473493 s : Import source
+Hadrons : Message  : 14.492333 s : Solve
+Grid    : Message  : 15.950606 s : ConjugateGradient Converged on iteration 52	Computed residual 9.70669e-09	True residual 9.70669e-09	Target 1e-08
+Grid    : Message  : 15.978067 s : SchurRedBlackBase solver true unprec resid 8.45282e-09
+Hadrons : Message  : 15.978130 s : Export solution
+Hadrons : Message  : 16.292100 s : Inversion for spin= 3, color= 1
+Hadrons : Message  : 16.292860 s : Import source
+Hadrons : Message  : 16.482480 s : Solve
+Grid    : Message  : 17.500110 s : ConjugateGradient Converged on iteration 52	Computed residual 9.70669e-09	True residual 9.70669e-09	Target 1e-08
+Grid    : Message  : 17.526742 s : SchurRedBlackBase solver true unprec resid 8.45282e-09
+Hadrons : Message  : 17.526806 s : Export solution
+Hadrons : Message  : 17.579774 s : Inversion for spin= 3, color= 2
+Hadrons : Message  : 17.579845 s : Import source
+Hadrons : Message  : 17.598521 s : Solve
+Grid    : Message  : 19.484600 s : ConjugateGradient Converged on iteration 52	Computed residual 9.70669e-09	True residual 9.70669e-09	Target 1e-08
+Grid    : Message  : 19.754250 s : SchurRedBlackBase solver true unprec resid 8.45282e-09
+Hadrons : Message  : 19.754950 s : Export solution
+Hadrons : Message  : 19.127833 s : ................ Timings
+Hadrons : Message  : 19.127922 s : * GLOBAL TIMERS
+Hadrons : Message  : 19.127939 s :     total: 18730258 us (100.0%)
+Hadrons : Message  : 19.127970 s : execution: 18730218 us (100.0%)
+Hadrons : Message  : 19.127987 s :     setup: 38 us (0.0%)
+Hadrons : Message  : 19.128005 s : ................ Memory management
+Hadrons : Message  : 19.128067 s : Memory: current total 1.3 GB / environment 162.8 MB / comms 1 GB / grid 162.8 MB / peak total 1.3 GB
+Hadrons : Message  : 19.128095 s : Garbage collection...
+Hadrons : Message  : 19.128108 s : Destroying object 'DWF_l'
+Hadrons : Message  : 19.130876 s : Destroying object 'CG_l'
+Hadrons : Message  : 19.130903 s : Destroying object 'pt'
+Hadrons : Message  : 19.134060 s : Destroying object 'Qpt_l_5d'
+Hadrons : Message  : 19.134086 s : Destroying object 'Qpt_l_tmp_tmp'
+Hadrons : Message  : 19.134102 s : Destroying object 'Qpt_l_tmp_source'
+Hadrons : Message  : 19.134488 s : Destroying object 'Qpt_l_tmp_sol'
+Hadrons : Message  : 19.134534 s : Memory: current total 1.2 GB / environment 9 MB / comms 1 GB / grid 9.0 MB / peak total 1.3 GB
+Hadrons : Message  : 19.134560 s : ---------------- Measurement step 6/8 (module 'sink') ----------------
+Hadrons : Message  : 19.134576 s : ................ Module execution
+Hadrons : Message  : 19.134610 s : Setting up point sink function for momentum [0 0 0]
+Hadrons : Message  : 19.134975 s : ................ Timings
+Hadrons : Message  : 19.135003 s : * GLOBAL TIMERS
+Hadrons : Message  : 19.135019 s :     total: 378 us (100.0%)
+Hadrons : Message  : 19.135051 s : execution: 364 us (96.3%)
+Hadrons : Message  : 19.135067 s :     setup: 12 us (3.2%)
+Hadrons : Message  : 19.135084 s : ................ Memory management
+Hadrons : Message  : 19.135117 s : Memory: current total 1.2 GB / environment 9.1 MB / comms 1 GB / grid 9.1 MB / peak total 1.3 GB
+Hadrons : Message  : 19.135140 s : Garbage collection...
+Hadrons : Message  : 19.135153 s : Destroying object 'sink_tmp_coor'
+Hadrons : Message  : 19.135180 s : Memory: current total 1.2 GB / environment 9.1 MB / comms 1 GB / grid 9.1 MB / peak total 1.3 GB
+Hadrons : Message  : 19.135202 s : ---------------- Measurement step 7/8 (module 'meson_pt_ll') ----------------
+Hadrons : Message  : 19.135216 s : ................ Module execution
+Hadrons : Message  : 19.135237 s : Computing meson contractions 'meson_pt_ll' using quarks 'Qpt_l' and 'Qpt_l'
+Hadrons : Message  : 19.135293 s : (using sink 'sink')
+Hadrons : Message  : 19.135325 s : (its a sink already 'sink')
+Hadrons : Message  : 19.143844 s : ................ Timings
+Hadrons : Message  : 19.143869 s : * GLOBAL TIMERS
+Hadrons : Message  : 19.143883 s :     total: 8336 us (100.0%)
+Hadrons : Message  : 19.143904 s : execution: 8329 us (99.9%)
+Hadrons : Message  : 19.143919 s :     setup: 4 us (0.0%)
+Hadrons : Message  : 19.143935 s : ................ Memory management
+Hadrons : Message  : 19.143979 s : Memory: current total 1.2 GB / environment 9.1 MB / comms 1 GB / grid 9.1 MB / peak total 1.3 GB
+Hadrons : Message  : 19.144002 s : Garbage collection...
+Hadrons : Message  : 19.144015 s : Destroying object 'meson_pt_ll_tmp_c'
+Hadrons : Message  : 19.144044 s : Memory: current total 1.2 GB / environment 9.1 MB / comms 1 GB / grid 9.1 MB / peak total 1.3 GB
+Hadrons : Message  : 19.144065 s : ---------------- Measurement step 8/8 (module 'pipi_ptpt_llll') ----------------
+Hadrons : Message  : 19.144078 s : ................ Module execution
+Hadrons : Message  : 19.144098 s : Computing pipi contractions 'pipi_ptpt_llll' using quarks 'Qpt_l', 'Qpt_l', 'Qpt_l' and 'Qpt_l
+Hadrons : Message  : 19.144126 s : (using sink1 'sink')
+Hadrons : Message  : 19.144140 s : (using sink2 'sink')
+Hadrons : Message  : 19.170544 s : One sink was successfully appliedHadrons : Message  : 19.171786 s : ................ Timings
+Hadrons : Message  : 19.171805 s : * GLOBAL TIMERS
+Hadrons : Message  : 19.171815 s :     total: 27557 us (100.0%)
+Hadrons : Message  : 19.171832 s : execution: 27549 us (100.0%)
+Hadrons : Message  : 19.171842 s :     setup: 5 us (0.0%)
+Hadrons : Message  : 19.171853 s : ................ Memory management
+Hadrons : Message  : 19.171887 s : Memory: current total 1.2 GB / environment 9.1 MB / comms 1 GB / grid 9.1 MB / peak total 1.3 GB
+Hadrons : Message  : 19.171903 s : Garbage collection...
+Hadrons : Message  : 19.171912 s : Destroying object 'Qpt_l'
+Hadrons : Message  : 19.172193 s : Destroying object 'sink'
+Hadrons : Message  : 19.172206 s : Destroying object 'pipi_ptpt_llll_tmp_c'
+Hadrons : Message  : 19.172797 s : Memory: current total 1.2 GB / environment 64 KB / comms 1 GB / grid 66 KB / peak total 1.3 GB
+Hadrons : Message  : 19.172817 s : ---------------- Measurement time profile----------------
+Hadrons : Message  : 19.172827 s : Total measurement time: 18.778375 s us
+Hadrons : Message  : 19.172835 s : ................ Module breakdown
+Hadrons : Message  : 19.172846 s :          Qpt_l: 18730258 us (99.7%)
+Hadrons : Message  : 19.172858 s : pipi_ptpt_llll: 27557 us (0.1%)
+Hadrons : Message  : 19.172868 s :          DWF_l: 9566 us (0.1%)
+Hadrons : Message  : 19.172878 s :    meson_pt_ll: 8336 us (0.0%)
+Hadrons : Message  : 19.172887 s :          gauge: 1482 us (0.0%)
+Hadrons : Message  : 19.172897 s :             pt: 766 us (0.0%)
+Hadrons : Message  : 19.172907 s :           sink: 378 us (0.0%)
+Hadrons : Message  : 19.172917 s :           CG_l: 32 us (0.0%)
+Hadrons : Message  : 19.172928 s : ================ End of measurement ================
+Hadrons : Message  : 19.172937 s : Destroying object 'sink_momph'
+Hadrons : Message  : 19.179123 s : Grid is finalizing now

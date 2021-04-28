@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Hadrons.  If not, see <http://www.gnu.org/licenses/>.
  *
- * See the full license in the file "LICENSE" in the top level distribution 
+ * See the full license in the file "LICENSE" in the top level distribution
  * directory.
  */
 
@@ -37,14 +37,14 @@
 BEGIN_HADRONS_NAMESPACE
 
 /*
- 
+
  Meson contractions
  -----------------------------
- 
+
  * options:
  - q1: input propagator 1 (string)
  - q2: input propagator 2 (string)
- - gammas: gamma products to insert at sink & source, pairs of gamma matrices 
+ - gammas: gamma products to insert at sink & source, pairs of gamma matrices
            (space-separated strings) in round brackets (i.e. (g_sink g_src)),
            in a sequence (e.g. "(Gamma5 Gamma5)(Gamma5 GammaT)").
 
@@ -128,7 +128,7 @@ void TMeson<FImpl1, FImpl2>::parseGammaString(std::vector<GammaPair> &gammaList)
         {
             for (unsigned int j = 1; j < Gamma::nGamma; j += 2)
             {
-                gammaList.push_back(std::make_pair((Gamma::Algebra)i, 
+                gammaList.push_back(std::make_pair((Gamma::Algebra)i,
                                                    (Gamma::Algebra)j));
             }
         }
@@ -137,7 +137,7 @@ void TMeson<FImpl1, FImpl2>::parseGammaString(std::vector<GammaPair> &gammaList)
     {
         // Parse individual contractions from input string.
         gammaList = strToVec<GammaPair>(par().gammas);
-    } 
+    }
 }
 
 // dependencies/products ///////////////////////////////////////////////////////
@@ -145,7 +145,7 @@ template <typename FImpl1, typename FImpl2>
 std::vector<std::string> TMeson<FImpl1, FImpl2>::getInput(void)
 {
     std::vector<std::string> input = {par().q1, par().q2, par().sink};
-    
+
     return input;
 }
 
@@ -153,7 +153,7 @@ template <typename FImpl1, typename FImpl2>
 std::vector<std::string> TMeson<FImpl1, FImpl2>::getOutput(void)
 {
     std::vector<std::string> output = {};
-    
+
     return output;
 }
 
@@ -161,7 +161,7 @@ template <typename FImpl1, typename FImpl2>
 std::vector<std::string> TMeson<FImpl1, FImpl2>::getOutputFiles(void)
 {
     std::vector<std::string> output = {resultFilename(par().output)};
-    
+
     return output;
 }
 
@@ -182,13 +182,13 @@ void TMeson<FImpl1, FImpl2>::execute(void)
     LOG(Message) << "Computing meson contractions '" << getName() << "' using"
                  << " quarks '" << par().q1 << "' and '" << par().q2 << "'"
                  << std::endl;
-    
+
     std::vector<TComplex>  buf;
     std::vector<Result>    result;
     Gamma                  g5(Gamma::Algebra::Gamma5);
     std::vector<GammaPair> gammaList;
     int                    nt = env().getDim(Tp);
-    
+
     parseGammaString(gammaList);
     result.resize(gammaList.size());
     for (unsigned int i = 0; i < result.size(); ++i)
@@ -202,13 +202,13 @@ void TMeson<FImpl1, FImpl2>::execute(void)
     {
         auto &q1 = envGet(SlicedPropagator1, par().q1);
         auto &q2 = envGet(SlicedPropagator2, par().q2);
-        
+
         LOG(Message) << "(propagator already sinked)" << std::endl;
         for (unsigned int i = 0; i < result.size(); ++i)
         {
             Gamma gSnk(gammaList[i].first);
             Gamma gSrc(gammaList[i].second);
-            
+
             for (unsigned int t = 0; t < nt; ++t)
             {
                 result[i].corr[t] = TensorRemove(trace(mesonConnected(q1[t], q2[t], gSnk, gSrc)));
@@ -219,7 +219,7 @@ void TMeson<FImpl1, FImpl2>::execute(void)
     {
         auto &q1 = envGet(PropagatorField1, par().q1);
         auto &q2 = envGet(PropagatorField2, par().q2);
-        
+
         envGetTmp(LatticeComplex, c);
         LOG(Message) << "(using sink '" << par().sink << "')" << std::endl;
         for (unsigned int i = 0; i < result.size(); ++i)
@@ -227,19 +227,19 @@ void TMeson<FImpl1, FImpl2>::execute(void)
             Gamma       gSnk(gammaList[i].first);
             Gamma       gSrc(gammaList[i].second);
             std::string ns;
-                
+
             ns = vm().getModuleNamespace(env().getObjectModule(par().sink));
             if (ns == "MSource")
             {
                 PropagatorField1 &sink = envGet(PropagatorField1, par().sink);
-                
+                LOG(Message) << "(sinking a source '" << par().sink << "')" << std::endl;
                 c = trace(mesonConnected(q1, q2, gSnk, gSrc)*sink);
                 sliceSum(c, buf, Tp);
             }
             else if (ns == "MSink")
             {
                 SinkFnScalar &sink = envGet(SinkFnScalar, par().sink);
-                
+                LOG(Message) << "(its a sink already '" << par().sink << "')" << std::endl;
                 c   = trace(mesonConnected(q1, q2, gSnk, gSrc));
                 buf = sink(c);
             }

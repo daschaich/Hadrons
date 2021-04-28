@@ -1,0 +1,4 @@
+-I/home/chrisculver/Code/LatticeQCD/Hadrons/install/include
+-I/home/chrisculver/Code/LatticeQCD/Grid/install/include
+-I/home/chrisculver/Code/Libraries/hdf5/install/include
+-I/home/chrisculver/Code/LatticeQCD/c-lime/install/include
