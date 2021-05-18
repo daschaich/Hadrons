@@ -16,9 +16,8 @@ struct PiPiEntry: public SqlEntry
     HADRONS_SQL_FIELDS(SqlNotNull<std::string>, q1,
                         SqlNotNull<std::string>, q2,
                         SqlNotNull<std::string>, q3,
-                        SqlNotNull<std::string>, q4,
-                        SqlNotNull<std::string>, source1,
-                        SqlNotNull<std::string>, source2);
+                        SqlNotNull<std::string>, q4
+                    );
 };
 
 int main(int argc, char *argv[])
@@ -45,7 +44,6 @@ int main(int argc, char *argv[])
 
 
     // global initialisation
-
     application.setPar(globalPar);
 
     // create modules //////////////////////////////////////////////////////////
@@ -81,49 +79,71 @@ int main(int argc, char *argv[])
     MSource::Point::Par ptPar;
     ptPar.position = "0 0 0 0";
     application.createModule<MSource::Point>("pt", ptPar);
-    // sink
-    MSink::Point::Par sinkPar;
-    sinkPar.mom = "0 0 0";
-    application.createModule<MSink::ScalarPoint>("sink", sinkPar);
+    // scalar sink
+    MSink::ScalarPoint::Par scalarSinkPar;
+    scalarSinkPar.mom = "0 0 0";
+    application.createModule<MSink::ScalarPoint>("scalarSink", scalarSinkPar);
+
+
+    MSink::Point::Par ptSinkPar;
+    ptSinkPar.mom = "0 0 0";
+    application.createModule<MSink::Point>("ptSink", ptSinkPar);
+
+
+    MSink::Smear::Par smearPar;
+    smearPar.q = "Qpt_" + flavor;
+    smearPar.sink = "ptSink"; //can't smear with scalarSink
+    application.createModule<MSink::Smear>("smearSink", smearPar);
 
     //mesons
     MContraction::Meson::Par mesPar;
     MesonEntry mesEntry;
+    //mesons with sliced propagators
+    mesPar.output = "mesons/pt_smeared_" + flavor + flavor;
+    mesPar.q1 = "smearSink";
+    mesPar.q2 = "smearSink";
+    mesPar.gammas = "(Gamma5 Gamma5)";  //all works, how to do one type?
+    application.createModule<MContraction::Meson>("meson_pt_smear" + flavor + flavor, mesPar);
+    application.setResultMetadata("meson_pt_smear" + flavor + flavor, "meson", mesEntry);
 
+/*
+    //point source-scalar sink
     mesPar.output = "mesons/pt_" + flavor + flavor;
     mesPar.q1 = "Qpt_" + flavor;
     mesPar.q2 = "Qpt_" + flavor;
-    mesPar.gammas = "(Gamma5 Gamma5)";  //all works, how to do one type?
-    mesPar.sink = "sink";
+    mesPar.gammas = "(Gamma5 Gamma5)";
+    mesPar.sink = "scalarSink";
 
     mesEntry.q1 = flavor;
     mesEntry.q2 = flavor;
     mesEntry.source = "pt";
     application.createModule<MContraction::Meson>("meson_pt_" + flavor + flavor, mesPar);
     application.setResultMetadata("meson_pt_" + flavor + flavor, "meson", mesEntry);
+*/
 
 
-    //pi-pi
+
+
+/*
+    //pi-pi with sliced propagators, aka already smeared fields
     MContraction::PiPiPar pipiPar;
     PiPiEntry pipiEntry;
 
     pipiPar.output = "pipi/pt_" + flavor + flavor + flavor + flavor;
-    pipiPar.q1 = "Qpt_" + flavor;
-    pipiPar.q2 = "Qpt_" + flavor;
-    pipiPar.q3 = "Qpt_" + flavor;
-    pipiPar.q4 = "Qpt_" + flavor;
-    pipiPar.sink1 = "sink";
-    pipiPar.sink2 = "sink";
+    pipiPar.q1 = "smearSink";
+    pipiPar.q2 = "smearSink";
+    pipiPar.q3 = "smearSink";
+    pipiPar.q4 = "smearSink";
 
     pipiEntry.q1 = flavor;
     pipiEntry.q2 = flavor;
     pipiEntry.q3 = flavor;
     pipiEntry.q4 = flavor;
-    pipiEntry.source1 = "pt";
-    pipiEntry.source2 = "pt";
 
     application.createModule<MContraction::PiPi>("pipi_ptpt_" + flavor + flavor + flavor + flavor, pipiPar);
-    application.setResultMetadata("pipi_ptpt_" + flavor + flavor + flavor + flavor, "pipi", pipiEntry);
+//    application.setResultMetadata("pipi_ptpt_" + flavor + flavor + flavor + flavor, "pipi", pipiEntry);
+*/
+
 
     // execution ///////////////////////////////////////////////////////////////
     try

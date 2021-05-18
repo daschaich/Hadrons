@@ -22,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Hadrons.  If not, see <http://www.gnu.org/licenses/>.
  *
- * See the full license in the file "LICENSE" in the top level distribution 
+ * See the full license in the file "LICENSE" in the top level distribution
  * directory.
  */
 
@@ -130,7 +130,7 @@ template <typename FImpl>
 std::vector<std::string> TBaryon<FImpl>::getInput(void)
 {
     std::vector<std::string> input = {par().q1, par().q2, par().q3, par().sinkq1, par().sinkq2, par().sinkq3};
-    
+
     return input;
 }
 
@@ -138,7 +138,7 @@ template <typename FImpl>
 std::vector<std::string> TBaryon<FImpl>::getOutput(void)
 {
     std::vector<std::string> out = {};
-    
+
     return out;
 }
 template <typename FImpl>
@@ -148,9 +148,9 @@ std::vector<std::string> TBaryon<FImpl>::getOutputFiles(void)
 
     if (par().trace)
         output.push_back( resultFilename(par().output) );
-    else 
+    else
         output.push_back( resultFilename(par().output+"_Matrix") );
-    
+
     return output;
 }
 
@@ -158,7 +158,7 @@ template <typename FImpl>
 void TBaryon<FImpl>::parseGammaString(std::vector<GammaABPair> &gammaList)
 {
     gammaList.clear();
-    
+
     std::string gammaString = par().gammas;
     //Shorthands for standard baryon operators
     gammaString = regex_replace(gammaString, std::regex("j12"),"(Identity SigmaXZ)");
@@ -168,8 +168,8 @@ void TBaryon<FImpl>::parseGammaString(std::vector<GammaABPair> &gammaList)
     //Shorthands for less common baryon operators
     gammaString = regex_replace(gammaString, std::regex("j12_alt1"),"(Gamma5 MinusSigmaYT)");
     gammaString = regex_replace(gammaString, std::regex("j12_alt2"),"(Identity GammaYGamma5)");
-    
-    //A single gamma matrix 
+
+    //A single gamma matrix
     std::regex rex_g("([0-9a-zA-Z]+)");
     //The full string we expect
     std::regex rex("( *\\(( *\\(([0-9a-zA-Z]+) +([0-9a-zA-Z]+) *\\)){2} *\\) *)+");
@@ -180,21 +180,21 @@ void TBaryon<FImpl>::parseGammaString(std::vector<GammaABPair> &gammaList)
     auto gamma_begin = std::sregex_iterator(gammaString.begin(), gammaString.end(), rex_g);
     auto gamma_end = std::sregex_iterator();
 
-    int nGamma = std::distance(gamma_begin, gamma_end); 
+    int nGamma = std::distance(gamma_begin, gamma_end);
     //couldn't find out how to count the size in the iterator, other than looping through it...
   /*  int nGamma=0;
     for (std::sregex_iterator i = gamma_begin; i != gamma_end; ++i) {
         nGamma++;
     }
-*/   
+*/
     gammaList.resize(nGamma/4);
     std::vector<std::string> gS;
     gS.resize(nGamma);
     //even more ugly workarounds here...
     int iG=0;
     for (std::sregex_iterator i = gamma_begin; i != gamma_end; ++i) {
-        std::smatch match = *i;                                                 
-        gS[iG] = match.str(); 
+        std::smatch match = *i;
+        gS[iG] = match.str();
         iG++;
     }
     for (int i = 0; i < gammaList.size(); i++){
@@ -215,7 +215,7 @@ void TBaryon<FImpl>::setup(void)
 {
     if (par().trace)
         envTmpLat(LatticeComplex, "c");
-    else 
+    else
         envTmpLat(SpinMatrixField, "cMat");
 }
 
@@ -269,7 +269,7 @@ void TBaryon<FImpl>::execute(void)
     LOG(Message) << "  using quarksR (" << quarksR << ") " << std::endl;
     if (par().sim_sink)
         LOG(Message) << "  with simultaneous sink " << par().sinkq1 << std::endl;
-    else 
+    else
         LOG(Message) << "  with sinks (" << par().sinkq1 << ", " << par().sinkq2 << ", and " << par().sinkq3 << ")" << std::endl;
 
     if (par().trace)
@@ -279,12 +279,12 @@ void TBaryon<FImpl>::execute(void)
 
     for (int iG = 0; iG < gammaList.size(); iG++)
         LOG(Message) << "    with (Gamma^A,Gamma^B)_left = ( " << gammaList[iG].first.first << " , " << gammaList[iG].first.second << "') and (Gamma^A,Gamma^B)_right = ( " << gammaList[iG].second.first << " , " << gammaList[iG].second.second << ")" << std::endl;
-    
+
     int nt = env().getDim(Tp);
-        
+
     int wick_contractions = 0;
     BaryonUtils<FIMPL>::WickContractions(quarksL,quarksR,wick_contractions);
-    
+
     PropagatorField &q1  = envGet(PropagatorField, propsL[0]);
     PropagatorField &q2  = envGet(PropagatorField, propsL[1]);
     PropagatorField &q3  = envGet(PropagatorField, propsL[2]);
@@ -303,7 +303,7 @@ void TBaryon<FImpl>::execute(void)
     rMat.info.quarksL    = quarksL;
     rMat.info.shuffle    = par().shuffle;
 
-    if (par().sim_sink) 
+    if (par().sim_sink)
     {
         for (unsigned int i = 0; i < gammaList.size(); ++i)
         {
@@ -324,13 +324,13 @@ void TBaryon<FImpl>::execute(void)
             Gamma gBl(gammaList[i].first.second);
             Gamma gAr(gammaList[i].second.first);
             Gamma gBr(gammaList[i].second.second);
-        
+
             std::string ns = vm().getModuleNamespace(env().getObjectModule(par().sinkq1));
             if (ns == "MSource")
             {
                 PropagatorFieldScalar &sink = envGet(PropagatorFieldScalar, par().sinkq1);
 
-                if (par().trace) 
+                if (par().trace)
                 {
                     envGetTmp(LatticeComplex, c);
                     c=Zero();
@@ -340,10 +340,10 @@ void TBaryon<FImpl>::execute(void)
                                                         par().parity,
                                                         c);
 
-                    auto test = closure(trace(sink*c));     
-                    sliceSum(test, buf, Tp); 
-                } 
-                else 
+                    auto test = closure(trace(sink*c));
+                    sliceSum(test, buf, Tp);
+                }
+                else
                 {
                     envGetTmp(SpinMatrixField, cMat);
                     cMat=Zero();
@@ -351,6 +351,7 @@ void TBaryon<FImpl>::execute(void)
                                                         gAl,gBl,gAr,gBr,
                                                         wick_contractions,
                                                         cMat);
+
                     cMat = cMat*sink;
 
                     sliceSum(cMat, bufMat, Tp);
@@ -358,7 +359,7 @@ void TBaryon<FImpl>::execute(void)
             }
             else if (ns == "MSink")
             {
-                if (par().trace) 
+                if (par().trace)
                 {
                     envGetTmp(LatticeComplex, c);
                     c=Zero();
@@ -370,8 +371,8 @@ void TBaryon<FImpl>::execute(void)
 
                     SinkFnScalar &sink = envGet(SinkFnScalar, par().sinkq1);
                     buf = sink(c);
-                } 
-                else 
+                }
+                else
                 {
                     envGetTmp(SpinMatrixField, cMat);
                     cMat=Zero();
@@ -385,24 +386,24 @@ void TBaryon<FImpl>::execute(void)
                 }
             }
 
-            if (par().trace) 
+            if (par().trace)
             {
                 r.corr.clear();
                 for (unsigned int t = 0; t < buf.size(); ++t)
                     r.corr.push_back(TensorRemove(buf[t]));
                 result.push_back(r);
-            } 
-            else 
+            }
+            else
             {
                 rMat.corr.clear();
                 for (unsigned int t = 0; t < bufMat.size(); ++t)
-                    rMat.corr.push_back(bufMat[t]);      
+                    rMat.corr.push_back(bufMat[t]);
                 resultMat.push_back(rMat);
             }
         }
 
-    } 
-    else 
+    }
+    else
     {
 
         const int epsilon[6][3] = {{0,1,2},{1,2,0},{2,0,1},{0,2,1},{2,1,0},{1,0,2}};
@@ -411,20 +412,20 @@ void TBaryon<FImpl>::execute(void)
         sinkFn[0] = &envGet(SinkFn, par().sinkq1);
         sinkFn[1] = &envGet(SinkFn, par().sinkq2);
         sinkFn[2] = &envGet(SinkFn, par().sinkq3);
-        
+
         SlicedPropagator q1_slice[6];
         SlicedPropagator q2_slice[6];
         SlicedPropagator q3_slice[6];
 
         // Compute all sinked propagators
-        for (int ie=0; ie < 6 ; ie++) 
+        for (int ie=0; ie < 6 ; ie++)
         {
             q1_slice[ie] = (*sinkFn[epsilon[ie][0]])(q1);
             q2_slice[ie] = (*sinkFn[epsilon[ie][1]])(q2);
             q3_slice[ie] = (*sinkFn[epsilon[ie][2]])(q3);
         }
 
-        for (int iG = 0; iG < gammaList.size(); iG++) 
+        for (int iG = 0; iG < gammaList.size(); iG++)
         {
             std::vector<TComplex> buf(nt, Zero());
             std::vector<SpinMatrix> bufMat(nt, Zero());
@@ -444,9 +445,9 @@ void TBaryon<FImpl>::execute(void)
             Gamma gAr(gammaList[iG].second.first);
             Gamma gBr(gammaList[iG].second.second);
 
-            for (int ie=0; ie < 6 ; ie++) 
+            for (int ie=0; ie < 6 ; ie++)
             {
-                if (std::bitset<6>(wick_contractions)[ie]) 
+                if (std::bitset<6>(wick_contractions)[ie])
                 {
                     // Perform the current contraction only
                     int wc = 0;
@@ -454,7 +455,7 @@ void TBaryon<FImpl>::execute(void)
                         wc += ((i == ie) ? 1 : 0) << i ;
 
 
-                    if (par().trace) 
+                    if (par().trace)
                     {
                         BaryonUtils<FIMPL>::ContractBaryonsSliced( q1_slice[ie],q2_slice[ie],q3_slice[ie],
                                                                     gAl,gBl,gAr,gBr,
@@ -462,8 +463,8 @@ void TBaryon<FImpl>::execute(void)
                                                                     par().parity,
                                                                     nt,
                                                                     buf);
-                    } 
-                    else 
+                    }
+                    else
                     {
                         BaryonUtils<FIMPL>::ContractBaryonsSlicedMatrix( q1_slice[ie],q2_slice[ie],q3_slice[ie],
                                                                     gAl,gBl,gAr,gBr,
@@ -474,18 +475,18 @@ void TBaryon<FImpl>::execute(void)
                 }
             }
 
-            if (par().trace) 
+            if (par().trace)
             {
                 r.corr.clear();
                 for (int t = 0; t < nt; t++)
                     r.corr.push_back(TensorRemove(buf[t]));
                 result.push_back(r);
-            } 
-            else 
+            }
+            else
             {
                 rMat.corr.clear();
                 for (unsigned int t = 0; t < bufMat.size(); ++t)
-                    rMat.corr.push_back(bufMat[t]);      
+                    rMat.corr.push_back(bufMat[t]);
                 resultMat.push_back(rMat);
             }
         }
@@ -493,7 +494,7 @@ void TBaryon<FImpl>::execute(void)
 
     if (par().trace)
         saveResult(par().output, "baryon", result);
-    else 
+    else
         saveResult(par().output + "_Matrix", "baryonMat", resultMat);
 
 }

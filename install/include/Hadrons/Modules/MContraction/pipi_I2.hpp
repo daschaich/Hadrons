@@ -23,8 +23,6 @@ class PiPiPar: Serializable
                                         std::string, q2,
                                         std::string, q3,
                                         std::string, q4,
-                                        std::string, sink1,
-                                        std::string, sink2,
                                         std::string, output);
 };
 
@@ -70,7 +68,7 @@ TPiPi<FImpl1, FImpl2, FImpl3, FImpl4>::TPiPi(const std::string name)
 template <typename FImpl1, typename FImpl2, typename FImpl3, typename FImpl4>
 std::vector<std::string> TPiPi<FImpl1, FImpl2, FImpl3, FImpl4>::getInput(void)
 {
-    std::vector<std::string> input = {par().q1, par().q2, par().sink1, par().sink2};
+    std::vector<std::string> input = {par().q1, par().q2, par().q3, par().q4};
 
     return input;
 }
@@ -132,27 +130,29 @@ void TPiPi<FImpl1, FImpl2, FImpl3, FImpl4>::execute(void)
         auto &q3 = envGet(SlicedPropagator3, par().q3);
         auto &q4 = envGet(SlicedPropagator4, par().q4);
 
-        LOG(Message) << "(propagator already sinked)" << std::endl;
+        LOG(Message) << "[CC](propagator already sinked)" << std::endl;
 
         for(unsigned int t=0; t<nt; ++t)
         {
             result.corr[t] = TensorRemove(
-                                trace(d0(q1[t], q2[t], q3[t], q4[t]))
-                               -trace(d1(q1[t], q2[t]))*trace(d1(q3[t], q4[t]))
+                               - trace(d0(q1[t], q2[0], q3[t], q4[0]))
+                               +trace(d1(q1[t], q2[0]))*trace(d1(q3[t], q4[0]))
                                          );
         }
 
     }
     else
     {
+        LOG(Message) << "Error: Only use sliced propagators!";
+        /*
         auto &q1 = envGet(PropagatorField1, par().q1);
         auto &q2 = envGet(PropagatorField2, par().q2);
         auto &q3 = envGet(PropagatorField3, par().q3);
         auto &q4 = envGet(PropagatorField4, par().q4);
 
         envGetTmp(LatticeComplex, c);
-        LOG(Message) << "(using sink1 '" << par().sink1 << "')" << std::endl;
-        LOG(Message) << "(using sink2 '" << par().sink2 << "')" << std::endl;
+        LOG(Message) << "[CC](using sink1 '" << par().sink1 << "')" << std::endl;
+        LOG(Message) << "[CC](using sink2 '" << par().sink2 << "')" << std::endl;
         std::string ns1, ns2;
 
         ns1=vm().getModuleNamespace(env().getObjectModule(par().sink1));
@@ -160,25 +160,25 @@ void TPiPi<FImpl1, FImpl2, FImpl3, FImpl4>::execute(void)
 
         if( (ns1=="MSource") && (ns2=="MSource") )
         {
-            LOG(Message) << "Error: Haven't implemented what to do if my sinks are sources?";
+            LOG(Message) << "[CC]Error: Haven't implemented what to do if my sinks are sources?";
         }
         else if( (ns1=="MSink") && (ns2=="MSink") )
         {
             SinkFnScalar &sink1 = envGet(SinkFnScalar, par().sink1);
             SinkFnScalar &sink2 = envGet(SinkFnScalar, par().sink2);
 
-            c = trace(d0(q1, q2, q3, q4))
-               -trace(d1(q1, q2))*trace(d1(q3, q4));
+            c = -trace(d0(q1, q2, q3, q4))
+               +trace(d1(q1, q2))*trace(d1(q3, q4));
             buf = sink1(c);
         }
-        LOG(Message) << "One sink was successfully applied";
+        LOG(Message) << "[CC]One sink was successfully applied";
         for(unsigned int t=0; t<buf.size(); ++t)
         {
             result.corr[t] = TensorRemove(buf[t]);
         }
+        */
     }
-
-    saveResult(par().output, "meson", result);
+    saveResult(par().output, "pipi", result);
 }
 
 END_MODULE_NAMESPACE
