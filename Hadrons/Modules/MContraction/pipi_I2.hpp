@@ -23,6 +23,8 @@ class PiPiPar: Serializable
                                         std::string, q2,
                                         std::string, q3,
                                         std::string, q4,
+                                        std::string, sink1,
+                                        std::string, sink2,
                                         std::string, output);
 };
 
@@ -37,6 +39,10 @@ class TPiPi: public Module<PiPiPar>
         FERM_TYPE_ALIASES(FImpl4, 4);
         BASIC_TYPE_ALIASES(ScalarImplCR, Scalar);
         SINK_TYPE_ALIASES(Scalar);
+
+        typedef Lattice<iScalar<iMatrix<iMatrix<vComplex,Nc>,Ns>>> SCFieldMat;
+        typedef std::vector<SCFieldMat::scalar_object> SlicedPropagatorSCMat;
+        typedef std::function<SlicedPropagatorSCMat (const SCFieldMat &)> SinkFnSCMat;
 
         class Result: Serializable
         {
@@ -68,7 +74,8 @@ TPiPi<FImpl1, FImpl2, FImpl3, FImpl4>::TPiPi(const std::string name)
 template <typename FImpl1, typename FImpl2, typename FImpl3, typename FImpl4>
 std::vector<std::string> TPiPi<FImpl1, FImpl2, FImpl3, FImpl4>::getInput(void)
 {
-    std::vector<std::string> input = {par().q1, par().q2, par().q3, par().q4};
+    std::vector<std::string> input = {par().q1, par().q2, par().q3, par().q4,
+                                      par().sink1, par().sink2};
 
     return input;
 }
@@ -94,6 +101,8 @@ template <typename FImpl1, typename FImpl2, typename FImpl3, typename FImpl4>
 void TPiPi<FImpl1, FImpl2, FImpl3, FImpl4>::setup(void)
 {
     envTmpLat(LatticeComplex, "c");
+    //envTmpLat(SpinColorMatrixField, "tmp1");
+    //envTmpLat(SpinColorMatrixField, "tmp1");
 }
 
 
@@ -117,6 +126,8 @@ void TPiPi<FImpl1, FImpl2, FImpl3, FImpl4>::execute(void)
     Gamma g5(Gamma::Algebra::Gamma5);
     int nt=env().getDim(Tp);
     std::vector<TComplex> buf;
+    std::vector<TComplex> buf1, buf2;
+    std::vector<TComplex> p1, p2;
 
     result.corr.resize(nt);
 
@@ -135,16 +146,16 @@ void TPiPi<FImpl1, FImpl2, FImpl3, FImpl4>::execute(void)
         for(unsigned int t=0; t<nt; ++t)
         {
             result.corr[t] = TensorRemove(
-                               - trace(d0(q1[t], q2[0], q3[t], q4[0]))
-                               +trace(d1(q1[t], q2[0    ]))*trace(d1(q3[t], q4[0]))
+                               - trace(d0(q1[t], q2[t], q3[t], q4[t]))
+                               +trace(d1(q1[t], q2[t]))*trace(d1(q3[t], q4[t]))
                                          );
         }
 
     }
     else
     {
-        LOG(Message) << "Error: Only use sliced propagators!";
-        /*
+        //LOG(Message) << "Error: Only use sliced propagators!";
+
         auto &q1 = envGet(PropagatorField1, par().q1);
         auto &q2 = envGet(PropagatorField2, par().q2);
         auto &q3 = envGet(PropagatorField3, par().q3);
@@ -160,23 +171,55 @@ void TPiPi<FImpl1, FImpl2, FImpl3, FImpl4>::execute(void)
 
         if( (ns1=="MSource") && (ns2=="MSource") )
         {
-            LOG(Message) << "[CC]Error: Haven't implemented what to do if my sinks are sources?";
+            PropagatorField1 &sink1 = envGet(PropagatorField1, par().sink1);
+            PropagatorField2 &sink2 = envGet(PropagatorField1, par().sink2);
+
+            //auto p1 = sliceInnerProductVector(buf1, q1*adj(q2)*sink1, q3*adj(q4)*sink2, Tp);
+            //auto p2 = sliceSum(q3*adj(q4)*sink2, buf2, Tp);
+            //auto d1 = trace(p1*p2);
+            //auto d2 = trace(p1)*trace(p2)
+
+        /*
+            //single sum over x - pi(x)pi(x) ?
+            auto d1 = trace(q1*adj(q2)*q3*adj(q4)*sink1*sink2);
+            auto d2_0 = trace(q1*adj(q2)*sink1);
+            auto d2_1 = trace(q3*adj(q4)*sink2);
+            c = -d1 + d2_0*d2_1;
+            sliceSum(c, buf, Tp);
+        */
         }
         else if( (ns1=="MSink") && (ns2=="MSink") )
         {
-            SinkFnScalar &sink1 = envGet(SinkFnScalar, par().sink1);
-            SinkFnScalar &sink2 = envGet(SinkFnScalar, par().sink2);
+            SinkFnSCMat &sink1 = envGet(SinkFnSCMat, par().sink1);
+            SinkFnSCMat &sink2 = envGet(SinkFnSCMat, par().sink2);
 
-            c = -trace(d0(q1, q2, q3, q4))
-               +trace(d1(q1, q2))*trace(d1(q3, q4));
-            buf = sink1(c);
+            //c = -trace(d0(q1, q2, q3, q4))
+            //   +trace(d1(q1, q2))*trace(d1(q3, q4));
+            //buf = sink1(c);
+
+            auto tmp1 = adj(q1)*adj(g5)*q2*g5;
+            auto tmp2 = adj(q3)*adj(g5)*q4*g5;
+            auto s1 = sink1(tmp1);
+            auto s2 = sink2(tmp2);
+
+            for(size_t t=0; t<s1.size(); ++t)
+            {
+                auto d1 = trace(trace(trace(s1[t]*s2[t])));
+                auto d2 = trace(trace(trace(s1[t])))*trace(trace(trace(s2[t])));
+                result.corr[t] = TensorRemove(-d1+d2);
+            }
+
+
         }
-        LOG(Message) << "[CC]One sink was successfully applied";
-        for(unsigned int t=0; t<buf.size(); ++t)
-        {
-            result.corr[t] = TensorRemove(buf[t]);
-        }
-        */
+        //LOG(Message) << "[CC]One sink was successfully applied";
+        //for(unsigned int t=0; t<buf.size(); ++t)
+        //{
+            //auto d1 = trace(p1[t]*p2[t]);
+            //auto d2 = trace(p1[t])*trace(p2[t]);
+            //result.corr[t] = TensorRemove(buf[t]);
+            //result.corr[t] = TensorRemove(-d1+d2);
+        //}
+
     }
     saveResult(par().output, "pipi", result);
 }

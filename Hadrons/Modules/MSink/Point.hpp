@@ -22,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Hadrons.  If not, see <http://www.gnu.org/licenses/>.
  *
- * See the full license in the file "LICENSE" in the top level distribution 
+ * See the full license in the file "LICENSE" in the top level distribution
  * directory.
  */
 
@@ -71,15 +71,17 @@ protected:
     // execution
     virtual void execute(void);
 private:
-    bool        hasPhase_{false}; 
+    bool        hasPhase_{false};
     std::string momphName_;
 };
 
 typedef Lattice<iScalar<iMatrix<iScalar<vComplex>,Ns>>> SpinMatField;
+typedef Lattice<iScalar<iMatrix<iMatrix<vComplex,Nc>,Ns>>> SpinColorMatField;
 
 MODULE_REGISTER_TMP(Point,       TPoint<FIMPL::PropagatorField> , MSink);
 MODULE_REGISTER_TMP(ScalarPoint, TPoint<ScalarImplCR::Field>    , MSink);
 MODULE_REGISTER_TMP(SMatPoint,   TPoint<SpinMatField>           , MSink);
+MODULE_REGISTER_TMP(SCMatPoint,  TPoint<SpinColorMatField>      , MSink);
 
 /******************************************************************************
  *                          TPoint implementation                             *
@@ -96,7 +98,7 @@ template <typename Field>
 std::vector<std::string> TPoint<Field>::getInput(void)
 {
     std::vector<std::string> in;
-    
+
     return in;
 }
 
@@ -104,7 +106,7 @@ template <typename Field>
 std::vector<std::string> TPoint<Field>::getOutput(void)
 {
     std::vector<std::string> out = {getName()};
-    
+
     return out;
 }
 
@@ -120,12 +122,12 @@ void TPoint<Field>::setup(void)
 // execution ///////////////////////////////////////////////////////////////////
 template <typename Field>
 void TPoint<Field>::execute(void)
-{   
+{
     LOG(Message) << "Setting up point sink function for momentum ["
                  << par().mom << "]" << std::endl;
 
     auto &ph = envGet(LatticeComplex, momphName_);
-    
+
     if (!hasPhase_)
     {
         Complex           i(0.0,1.0);
@@ -147,9 +149,9 @@ void TPoint<Field>::execute(void)
         SlicedPropagator res;
         auto             &ph = envGet(LatticeComplex, momphName_);
         PropagatorField  tmp = ph*field;
-        
+
         sliceSum(tmp, res, Tp);
-        
+
         return res;
     };
     envGet(SinkFn, getName()) = sink;
