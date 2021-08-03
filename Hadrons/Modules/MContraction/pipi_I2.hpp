@@ -193,19 +193,16 @@ void TPiPi<FImpl1, FImpl2, FImpl3, FImpl4>::execute(void)
             SinkFnSCMat &sink1 = envGet(SinkFnSCMat, par().sink1);
             SinkFnSCMat &sink2 = envGet(SinkFnSCMat, par().sink2);
 
-            //c = -trace(d0(q1, q2, q3, q4))
-            //   +trace(d1(q1, q2))*trace(d1(q3, q4));
-            //buf = sink1(c);
-
             auto tmp1 = adj(q1)*adj(g5)*q2*g5;
             auto tmp2 = adj(q3)*adj(g5)*q4*g5;
             auto s1 = sink1(tmp1);
             auto s2 = sink2(tmp2);
 
+
             for(size_t t=0; t<s1.size(); ++t)
             {
-                auto d1 = trace(trace(trace(s1[t]*s2[t])));
-                auto d2 = trace(trace(trace(s1[t])))*trace(trace(trace(s2[t])));
+                auto d1 = trace(s1[t]*s2[t]);
+                auto d2 = trace(s1[t])*trace(s2[t]);
                 result.corr[t] = TensorRemove(-d1+d2);
             }
 
