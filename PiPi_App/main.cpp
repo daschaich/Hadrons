@@ -120,6 +120,15 @@ int main(int argc, char *argv[])
     scSinkPar.mom = "0 0 0";
     application.createModule<MSink::SCMatPoint>("scSink", scSinkPar);
 
+    // my pion contraction
+    MContraction::Pion::Par pionPar;
+    pionPar.output = "mesons/pion";
+    pionPar.q1 = "Qpt_l";
+    pionPar.q2 = "Qpt_l";
+    pionPar.sink1 = "scSink";
+    application.createModule<MContraction::Pion>("pion_my", pionPar);
+
+
     // pi-pi contraction
     MContraction::PiPi::Par pipiPar;
     pipiPar.output = "pipi/pt_llll";
