@@ -52,7 +52,8 @@ class TPiPi: public Module<PiPiPar>
                                                 std::vector<Complex>, d0,
                                                 std::vector<Complex>, d1,
                                                 std::vector<Complex>, s0,
-                                                std::vector<Complex>, s1);
+                                                std::vector<Complex>, s1,
+                                                std::vector<Complex>, cTst);
         };
 
     public:
@@ -130,6 +131,7 @@ void TPiPi<FImpl1, FImpl2, FImpl3, FImpl4>::execute(void)
     result.d1.resize(nt);
     result.s0.resize(nt);
     result.s1.resize(nt);
+    result.cTst.resize(nt);
     auto &q1 = envGet(PropagatorField1, par().q1);
     auto &q2 = envGet(PropagatorField2, par().q2);
     auto &q3 = envGet(PropagatorField3, par().q3);
@@ -147,11 +149,13 @@ void TPiPi<FImpl1, FImpl2, FImpl3, FImpl4>::execute(void)
     {
         auto d0 = trace(s0[t]*s1[t]);
         auto d1 = trace(s0[t])*trace(s1[t]);
+        auto dTst = -trace(s0[t]*s0[t])+trace(s0[t])*trace(s0[t]);
         result.s0[t] = TensorRemove(trace(s0[t]));
         result.s1[t] = TensorRemove(trace(s1[t]));
         result.d0[t] = TensorRemove(d0);
         result.d1[t] = TensorRemove(d1);
         result.corr[t] = TensorRemove(-d0+d1);
+        result.cTst[t] = TensorRemove(dTst);
     }
 
     saveResult(par().output, "pipi", result);
