@@ -118,14 +118,15 @@ int main(int argc, char *argv[])
     // sink to spin-color matrix
     MSink::Point::Par scSinkPar;
     scSinkPar.mom = "0 0 0";
-    application.createModule<MSink::SCMatPoint>("scSink", scSinkPar);
+    application.createModule<MSink::SCMatPoint>("scSink1", scSinkPar);
+    application.createModule<MSink::SCMatPoint>("scSink2", scSinkPar);
 
     // my pion contraction
     MContraction::Pion::Par pionPar;
     pionPar.output = "mesons/pion";
     pionPar.q1 = "Qpt_l";
     pionPar.q2 = "Qpt_l";
-    pionPar.sink1 = "scSink";
+    pionPar.sink1 = "scSink1";
     application.createModule<MContraction::Pion>("pion_my", pionPar);
 
 
@@ -136,8 +137,8 @@ int main(int argc, char *argv[])
     pipiPar.q2 = "Qpt_l";
     pipiPar.q3 = "Qpt_l";
     pipiPar.q4 = "Qpt_l";
-    pipiPar.sink1 = "scSink";
-    pipiPar.sink2 = "scSink";
+    pipiPar.sink1 = "scSink1";
+    pipiPar.sink2 = "scSink2";
     application.createModule<MContraction::PiPi>("pipi_pt_llll", pipiPar);
 
 
