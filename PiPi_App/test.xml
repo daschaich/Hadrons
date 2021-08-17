@@ -11,5 +11,32 @@
     <saveSchedule>false</saveSchedule>
   </global>
 
-  <config>/home/dc-culv1/rds/rds-dirac-dp162/4+6f/24nt64/b4.03_ml0.035_mh0.175/Configs/ckpoint_lat</config>
+  <configFilePrefix>/home/dc-culv1/rds/rds-dirac-dp162/4+6f/24nt64/b4.03_ml0.035_mh0.175/Configs/ckpoint_lat</configFilePrefix>
+  <inverterMass>0.035</inverterMass>
+  <solverResidual>1.0e-16</solverResidual>
+  <solverMaxInnerIter>100000</solverMaxInnerIter>
+  <solverMaxOuterIter>10</solverMaxOuterIter>
+
+  <sources>
+      <source>
+          <id>
+              <name>pt</name>
+              <type>MSource::Point</type>
+          </id>
+          <options>
+              <position>0 0 0 0</position>
+          </options>
+      </source>
+      <source>
+          <id>
+              <name>wall</name>
+              <type>MSource::Wall</type>
+          </id>
+          <options>
+              <tW>0</tW>
+              <mom>0 0 0</mom>
+          </options>
+      </source>
+  </sources>
+
 </grid>
