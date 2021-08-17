@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     std::cerr << "usage: " << argv[0] << " <parameter file> [Grid options]";
     std::cerr << std::endl;
     std::exit(EXIT_FAILURE);
-  } 
+  }
   parameterFileName = argv[1];
 
 
@@ -57,8 +57,8 @@ int main(int argc, char *argv[])
     // global initialisation
     application.setPar(globalPar);
     // create modules //////////////////////////////////////////////////////////
-    
-    
+
+
     std::string configFileName = "";
     {
       XmlReader reader(parameterFileName);

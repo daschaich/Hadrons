@@ -203,7 +203,7 @@ void TMeson<FImpl1, FImpl2>::execute(void)
         auto &q1 = envGet(SlicedPropagator1, par().q1);
         auto &q2 = envGet(SlicedPropagator2, par().q2);
 
-        LOG(Message) << "[CC](propagator already sinked)" << std::endl;
+        //LOG(Message) << "[CC](propagator already sinked)" << std::endl;
         for (unsigned int i = 0; i < result.size(); ++i)
         {
             Gamma gSnk(gammaList[i].first);
@@ -221,7 +221,7 @@ void TMeson<FImpl1, FImpl2>::execute(void)
         auto &q2 = envGet(PropagatorField2, par().q2);
 
         envGetTmp(LatticeComplex, c);
-        LOG(Message) << "[CC](using sink '" << par().sink << "')" << std::endl;
+        //LOG(Message) << "[CC](using sink '" << par().sink << "')" << std::endl;
         for (unsigned int i = 0; i < result.size(); ++i)
         {
             Gamma       gSnk(gammaList[i].first);
@@ -232,14 +232,14 @@ void TMeson<FImpl1, FImpl2>::execute(void)
             if (ns == "MSource")
             {
                 PropagatorField1 &sink = envGet(PropagatorField1, par().sink);
-                LOG(Message) << "[CC](sinking a source '" << par().sink << "')" << std::endl;
+                //LOG(Message) << "[CC](sinking a source '" << par().sink << "')" << std::endl;
                 c = trace(mesonConnected(q1, q2, gSnk, gSrc)*sink);
                 sliceSum(c, buf, Tp);
             }
             else if (ns == "MSink")
             {
                 SinkFnScalar &sink = envGet(SinkFnScalar, par().sink);
-                LOG(Message) << "[CC](its a sink already '" << par().sink << "')" << std::endl;
+                //LOG(Message) << "[CC](its a sink already '" << par().sink << "')" << std::endl;
                 c   = trace(mesonConnected(q1, q2, gSnk, gSrc));
                 buf = sink(c);
             }
