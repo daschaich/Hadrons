@@ -111,12 +111,23 @@ int main(int argc, char *argv[])
     ptPar.position = "0 0 0 0";
     application.createModule<MSource::Point>("pt", ptPar);
 
+    // Wall source
+    MSource::Wall::Par wallPar;
+    wallPar.tW = 0;
+    wallPar.mom = "0. 0. 0.";
+    application.createModule<MSource::Wall>("wall", wallPar);
+
     //prop
     MFermion::GaugeProp::Par quarkPar;
     quarkPar.solver = "CG_" + flavor;
     quarkPar.source = "pt";
     application.createModule<MFermion::GaugeProp>("Qpt_" + flavor, quarkPar);
 
+    //wall prop
+    MFermion::GaugeProp::Par wallquarkPar;
+    wallquarkPar.solver = "CG_" + flavor;
+    wallquarkPar.source = "wall";
+    application.createModule<MFermion::GaugeProp>("Qwall_" + flavor, wallquarkPar);
 
     // sink
     MSink::Point::Par sinkPar;
@@ -140,15 +151,6 @@ int main(int argc, char *argv[])
     application.createModule<MSink::SCMatPoint>("scSink1", scSinkPar);
     application.createModule<MSink::SCMatPoint>("scSink2", scSinkPar);
 
-    // my pion contraction
-    MContraction::Pion::Par pionPar;
-    pionPar.output = "mesons/pion";
-    pionPar.q1 = "Qpt_l";
-    pionPar.q2 = "Qpt_l";
-    pionPar.sink1 = "scSink1";
-    application.createModule<MContraction::Pion>("pion_my", pionPar);
-
-
     // pi-pi contraction
     MContraction::PiPi::Par pipiPar;
     pipiPar.output = "pipi/pt_llll";
@@ -160,6 +162,16 @@ int main(int argc, char *argv[])
     pipiPar.sink2 = "scSink2";
     application.createModule<MContraction::PiPi>("pipi_pt_llll", pipiPar);
 
+    // pi-pi wall sources contraction
+    MContraction::PiPi::Par pipiWallPar;
+    pipiWallPar.output = "pipi/wall_llll";
+    pipiWallPar.q1 = "Qwall_l";
+    pipiWallPar.q2 = "Qwall_l";
+    pipiWallPar.q3 = "Qwall_l";
+    pipiWallPar.q4 = "Qwall_l";
+    pipiWallPar.sink1 = "scSink1";
+    pipiWallPar.sink2 = "scSink2";
+    application.createModule<MContraction::PiPi>("pipi_wall_llll", pipiWallPar);
 
 
 
