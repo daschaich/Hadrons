@@ -22,7 +22,18 @@ struct PiPiEntry: public SqlEntry
 
 int main(int argc, char *argv[])
 {
-    // initialise Grid /////////////////////////////////////////////////////////
+  std::string parameterFileName;
+  if(argc<2)
+  {
+    std::cerr << "usage: " << argv[0] << " <parameter file> [Grid options]";
+    std::cerr << std::endl;
+    std::exit(EXIT_FAILURE);
+  } 
+  parameterFileName = argv[1];
+
+
+
+// initialise Grid /////////////////////////////////////////////////////////
     Grid_init(&argc, &argv);
     HadronsLogError.Active(GridLogError.isActive());
     HadronsLogWarning.Active(GridLogWarning.isActive());
@@ -36,20 +47,28 @@ int main(int argc, char *argv[])
 
     //Global parameters
     Application::GlobalPar globalPar;
-    globalPar.runId = "pion";
-    globalPar.database.resultDb = "pionResult.db";
-    globalPar.trajCounter.start = 1500;
-    globalPar.trajCounter.end = 1520;
-    globalPar.trajCounter.step = 20;
+
+    {
+      XmlReader reader(parameterFileName);
+      read(reader, "global", globalPar);
+    }
 
 
     // global initialisation
     application.setPar(globalPar);
-
     // create modules //////////////////////////////////////////////////////////
+    
+    
+    std::string configFileName = "";
+    {
+      XmlReader reader(parameterFileName);
+      read(reader, "config", configFileName);
+    }
 
     // gauge field
-    application.createModule<MGauge::Random>("gauge");
+    MIO::LoadNersc::Par gaugePar;
+    gaugePar.file = configFileName;
+    application.createModule<MIO::LoadNersc>("gauge", gaugePar);
     std::string flavor = "l";
 
     // stout smearing
