@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Hadrons.  If not, see <http://www.gnu.org/licenses/>.
  *
- * See the full license in the file "LICENSE" in the top level distribution 
+ * See the full license in the file "LICENSE" in the top level distribution
  * directory.
  */
 
@@ -83,7 +83,7 @@ template <typename FImpl>
 std::vector<std::string> TSourceSink<FImpl>::getInput(void)
 {
     std::vector<std::string> in = {par().source};
-    
+
     return in;
 }
 
@@ -91,7 +91,7 @@ template <typename FImpl>
 std::vector<std::string> TSourceSink<FImpl>::getOutput(void)
 {
     std::vector<std::string> out = {getName()};
-    
+
     return out;
 }
 
@@ -110,14 +110,14 @@ void TSourceSink<FImpl>::execute(void)
     LOG(Message) << "Setting up sink function with source '" << par().source << "' as the sink" << std::endl;
 
     PropagatorField &source  = envGet(PropagatorField, par().source);
-    
+
     auto sink = [this, source](const PropagatorField &field)
     {
         SlicedPropagator res;
         PropagatorField tmp = source*field;
-        
+
         sliceSum(tmp, res, Tp);
-        
+
         return res;
     };
     envGet(SinkFn, getName()) = sink;

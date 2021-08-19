@@ -49,24 +49,48 @@ int main(int argc, char *argv[])
     // create modules //////////////////////////////////////////////////////////
 
     // gauge field
-    application.createModule<MGauge::Unit>("gauge");
+    application.createModule<MGauge::Random>("gauge");
     std::string flavor = "l";
 
+    // stout smearing
+    MGauge::StoutSmearing::Par stoutPar;
+    stoutPar.gauge = "gauge";
+    stoutPar.steps = 3;
+    stoutPar.rho = 0.1;
+    application.createModule<MGauge::StoutSmearing>("stout", stoutPar);
+
+    MUtilities::GaugeSinglePrecisionCast::Par stoutfPar;
+    stoutfPar.field = "stout";
+    application.createModule<MUtilities::GaugeSinglePrecisionCast>("stoutf", stoutfPar);
+
+
     //action
-    MAction::DWF::Par actionPar;
-    actionPar.gauge = "gauge";
+    MAction::ScaledDWF::Par actionPar;
+    actionPar.gauge = "stout";
     actionPar.Ls = 12;
     actionPar.M5 = 1.8;
+    actionPar.scale=2.0;
     actionPar.mass = 0.01;
     actionPar.boundary = "1 1 1 -1";
-    application.createModule<MAction::DWF>("DWF_" + flavor, actionPar);
+    application.createModule<MAction::ScaledDWF>("DWF_outer_" + flavor, actionPar);
+
+    actionPar.gauge = "stoutf";
+    application.createModule<MAction::ScaledDWFF>("DWF_inner_" + flavor, actionPar);
+
 
     //solver
-    MSolver::RBPrecCG::Par solverPar;
-    solverPar.action = "DWF_" + flavor;
+    MSolver::MixedPrecisionRBPrecCG::Par solverPar;
+    solverPar.innerAction = "DWF_inner_" + flavor;
+    solverPar.outerAction = "DWF_outer_" + flavor;
     solverPar.residual = 1.0e-8;
-    solverPar.maxIteration = 10000;
-    application.createModule<MSolver::RBPrecCG>("CG_" + flavor, solverPar);
+    solverPar.maxInnerIteration = 10000;
+    solverPar.maxOuterIteration = 10;
+    application.createModule<MSolver::MixedPrecisionRBPrecCG>("CG_" + flavor, solverPar);
+
+    // source
+    MSource::Point::Par ptPar;
+    ptPar.position = "0 0 0 0";
+    application.createModule<MSource::Point>("pt", ptPar);
 
     //prop
     MFermion::GaugeProp::Par quarkPar;
@@ -75,74 +99,53 @@ int main(int argc, char *argv[])
     application.createModule<MFermion::GaugeProp>("Qpt_" + flavor, quarkPar);
 
 
-    // source
-    MSource::Point::Par ptPar;
-    ptPar.position = "0 0 0 0";
-    application.createModule<MSource::Point>("pt", ptPar);
-    // scalar sink
-    MSink::ScalarPoint::Par scalarSinkPar;
-    scalarSinkPar.mom = "0 0 0";
-    application.createModule<MSink::ScalarPoint>("scalarSink", scalarSinkPar);
+    // sink
+    MSink::Point::Par sinkPar;
+    sinkPar.mom = "0 0 0";
+    application.createModule<MSink::ScalarPoint>("sink", sinkPar);
 
 
-    MSink::Point::Par ptSinkPar;
-    ptSinkPar.mom = "0 0 0";
-    application.createModule<MSink::Point>("ptSink", ptSinkPar);
-
-
-    MSink::Smear::Par smearPar;
-    smearPar.q = "Qpt_" + flavor;
-    smearPar.sink = "ptSink"; //can't smear with scalarSink
-    application.createModule<MSink::Smear>("smearSink", smearPar);
-
-    //mesons
+    // pion contraction
     MContraction::Meson::Par mesPar;
-    MesonEntry mesEntry;
-    //mesons with sliced propagators
-    mesPar.output = "mesons/pt_smeared_" + flavor + flavor;
-    mesPar.q1 = "smearSink";
-    mesPar.q2 = "smearSink";
-    mesPar.gammas = "(Gamma5 Gamma5)";  //all works, how to do one type?
-    application.createModule<MContraction::Meson>("meson_pt_smear" + flavor + flavor, mesPar);
-    application.setResultMetadata("meson_pt_smear" + flavor + flavor, "meson", mesEntry);
-
-/*
-    //point source-scalar sink
-    mesPar.output = "mesons/pt_" + flavor + flavor;
-    mesPar.q1 = "Qpt_" + flavor;
-    mesPar.q2 = "Qpt_" + flavor;
-    mesPar.gammas = "(Gamma5 Gamma5)";
-    mesPar.sink = "scalarSink";
-
-    mesEntry.q1 = flavor;
-    mesEntry.q2 = flavor;
-    mesEntry.source = "pt";
-    application.createModule<MContraction::Meson>("meson_pt_" + flavor + flavor, mesPar);
-    application.setResultMetadata("meson_pt_" + flavor + flavor, "meson", mesEntry);
-*/
+    mesPar.output   = "mesons/pt_ll";
+    mesPar.q1       = "Qpt_l";
+    mesPar.q2       = "Qpt_l";
+    mesPar.gammas   = "all";
+    mesPar.sink     = "sink";
+    application.createModule<MContraction::Meson>("meson_pt_ll", mesPar);
 
 
+    // sink to spin-color matrix
+    MSink::Point::Par scSinkPar;
+    scSinkPar.mom = "0 0 0";
+    application.createModule<MSink::SCMatPoint>("scSink1", scSinkPar);
+    application.createModule<MSink::SCMatPoint>("scSink2", scSinkPar);
+
+    // my pion contraction
+    MContraction::Pion::Par pionPar;
+    pionPar.output = "mesons/pion";
+    pionPar.q1 = "Qpt_l";
+    pionPar.q2 = "Qpt_l";
+    pionPar.sink1 = "scSink1";
+    application.createModule<MContraction::Pion>("pion_my", pionPar);
 
 
-/*
-    //pi-pi with sliced propagators, aka already smeared fields
-    MContraction::PiPiPar pipiPar;
-    PiPiEntry pipiEntry;
+    // pi-pi contraction
+    MContraction::PiPi::Par pipiPar;
+    pipiPar.output = "pipi/pt_llll";
+    pipiPar.q1 = "Qpt_l";
+    pipiPar.q2 = "Qpt_l";
+    pipiPar.q3 = "Qpt_l";
+    pipiPar.q4 = "Qpt_l";
+    pipiPar.sink1 = "scSink1";
+    pipiPar.sink2 = "scSink2";
+    application.createModule<MContraction::PiPi>("pipi_pt_llll", pipiPar);
 
-    pipiPar.output = "pipi/pt_" + flavor + flavor + flavor + flavor;
-    pipiPar.q1 = "smearSink";
-    pipiPar.q2 = "smearSink";
-    pipiPar.q3 = "smearSink";
-    pipiPar.q4 = "smearSink";
 
-    pipiEntry.q1 = flavor;
-    pipiEntry.q2 = flavor;
-    pipiEntry.q3 = flavor;
-    pipiEntry.q4 = flavor;
 
-    application.createModule<MContraction::PiPi>("pipi_ptpt_" + flavor + flavor + flavor + flavor, pipiPar);
-//    application.setResultMetadata("pipi_ptpt_" + flavor + flavor + flavor + flavor, "pipi", pipiEntry);
-*/
+
+
+
 
 
     // execution ///////////////////////////////////////////////////////////////
