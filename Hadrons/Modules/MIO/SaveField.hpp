@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Hadrons.  If not, see <http://www.gnu.org/licenses/>.
  *
- * See the full license in the file "LICENSE" in the top level distribution 
+ * See the full license in the file "LICENSE" in the top level distribution
  * directory.
  */
 
@@ -95,7 +95,7 @@ template <typename Field, typename FieldIo>
 std::vector<std::string> TSaveField<Field, FieldIo>::getInput(void)
 {
     std::vector<std::string> in = {par().name};
-    
+
     return in;
 }
 
@@ -103,7 +103,7 @@ template <typename Field, typename FieldIo>
 std::vector<std::string> TSaveField<Field, FieldIo>::getOutput(void)
 {
     std::vector<std::string> out;
-    
+
     return out;
 }
 
@@ -111,7 +111,7 @@ template <typename Field, typename FieldIo>
 std::vector<std::string> TSaveField<Field, FieldIo>::getOutputFiles(void)
 {
     std::vector<std::string> out = {resultFilename(par().fileStem, "bin")};
-    
+
     return out;
 }
 
